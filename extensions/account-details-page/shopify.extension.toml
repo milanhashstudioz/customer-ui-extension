@@ -1,0 +1,14 @@
+api_version = "2026-07"
+
+[[extensions]]
+type = "ui_extension"
+name = "Account details page"
+handle = "account-details-page"
+uid = "6dccc80b-610e-6b3c-f8b1-4de5e65f95422f6dc09f"
+
+[[extensions.targeting]]
+target = "customer-account.page.render"
+module = "./src/AccountDetailsPage.jsx"
+
+[extensions.capabilities]
+api_access = true

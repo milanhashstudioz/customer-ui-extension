@@ -1,0 +1,14 @@
+api_version = "2026-07"
+
+[[extensions]]
+type = "ui_extension"
+name = "Order details block"
+handle = "order-details-block"
+uid = "378350e7-d693-4b92-6efd-bee103d9151e64d13432"
+
+[[extensions.targeting]]
+target = "customer-account.order-status.block.render"
+module = "./src/OrderDetailsBlock.jsx"
+
+[extensions.capabilities]
+api_access = true

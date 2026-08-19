@@ -1,0 +1,42 @@
+# Dependencies
+node_modules/
+
+# Environment variables / secrets
+.env
+.env.*
+!.env.example
+
+# Shopify CLI local configuration
+.shopify/
+
+# Local Shopify app configuration
+shopify.app.customer-account-starter.toml
+
+# Build output
+dist/
+build/
+coverage/
+
+# Cache / temporary files
+.cache/
+.tmp/
+tmp/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / editor
+.vscode/
+.idea/
+
+# Local databases
+*.sqlite
+*.sqlite3
+*.db

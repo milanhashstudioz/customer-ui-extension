@@ -1,0 +1,14 @@
+{
+  "name": "shopify-customer-account-app-starter",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "shopify app dev",
+    "deploy": "shopify app deploy"
+  },
+  "dependencies": {
+    "@preact/signals": "^2.11.1",
+    "@shopify/ui-extensions": "^2026.7.0",
+    "preact": "^10.29.8"
+  }
+}

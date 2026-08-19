@@ -1,0 +1,14 @@
+api_version = "2026-07"
+
+[[extensions]]
+type = "ui_extension"
+name = "Profile account summary"
+handle = "profile-account-summary"
+uid = "591a09fb-d5c8-2f53-1aa0-e4b2b9cb190c9eda233f"
+
+[[extensions.targeting]]
+target = "customer-account.profile.block.render"
+module = "./src/ProfileSummary.jsx"
+
+[extensions.capabilities]
+api_access = true

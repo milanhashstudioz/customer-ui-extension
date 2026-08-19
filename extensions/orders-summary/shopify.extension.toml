@@ -1,0 +1,14 @@
+api_version = "2026-07"
+
+[[extensions]]
+type = "ui_extension"
+name = "Orders summary"
+handle = "orders-summary"
+uid = "b9d9a6a0-001d-4bbe-78d1-a45afbe56dff2f702c79"
+
+[[extensions.targeting]]
+target = "customer-account.order-index.block.render"
+module = "./src/OrdersSummary.jsx"
+
+[extensions.capabilities]
+api_access = true
