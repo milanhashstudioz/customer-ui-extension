@@ -1,0 +1,14 @@
+api_version = "2026-07"
+
+[[extensions]]
+type = "ui_extension"
+name = "Dashboard page"
+handle = "dashboard-page"
+uid = "6409fa5f-a566-a5c8-6974-3d4e539a5aedcf946c58"
+
+[[extensions.targeting]]
+target = "customer-account.page.render"
+module = "./src/DashboardPage.jsx"
+
+[extensions.capabilities]
+api_access = true

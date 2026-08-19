@@ -17,7 +17,7 @@ export default function extension() {
 }
 
 const ACCOUNT_QUERY = `#graphql
-  query AccountDetailsPage {
+  query AccountDetailsPageQuery {
     customer {
       firstName
       lastName
@@ -47,106 +47,104 @@ function Extension() {
     return <s-text>Loading account details…</s-text>;
   }
 
-  try {
-    return (
-      <s-page
-        heading="Account details"
-        subheading={`${metafieldValue(customer.companyName)} • ${metafieldValue(customer.accountNumber)}`}
+  return (
+    <s-page
+      heading="Account details"
+      subheading={`${metafieldValue(customer.companyName)} • ${metafieldValue(customer.accountNumber)}`}
+    >
+      <s-button
+        slot="primary-action"
+        onClick={() => shopify.navigation.navigate('extension://dashboard-page')}
       >
-        <s-button
-          slot="primary-action"
-          onClick={() => shopify.navigation.navigate('shopify:customer-account/profile')}
-        >
-          Back to profile
-        </s-button>
+        Back to dashboard
+      </s-button>
 
-        {/* Debug Box */}
-        <s-box border="base" borderRadius="base" padding="base">
-          <s-stack direction="block" gap="base">
-            <s-heading>Extension Debug Info</s-heading>
-            <s-text><strong>Customer keys:</strong> {Object.keys(customer).join(', ')}</s-text>
-            <s-text><strong>Raw customer response:</strong> {JSON.stringify(customer)}</s-text>
+      <s-stack direction="block" gap="base">
+        {/* Navigation Tabs */}
+        <s-box padding="none">
+          <s-stack direction="inline" gap="base">
+            <s-button onClick={() => shopify.navigation.navigate('extension://dashboard-page')}>
+              Dashboard
+            </s-button>
+            <s-button variant="primary">Account Details</s-button>
+            <s-button onClick={() => shopify.navigation.navigate('shopify:customer-account/orders')}>
+              Order History
+            </s-button>
+            <s-button onClick={() => shopify.navigation.navigate('shopify:customer-account/profile')}>
+              Address Book
+            </s-button>
           </s-stack>
         </s-box>
 
-        <s-stack direction="block" gap="base">
-          <DetailSection
-            heading="Company information"
-            rows={[
-              ['Company name', metafieldValue(customer.companyName)],
-              ['Account number', metafieldValue(customer.accountNumber)],
-              ['Account status', metafieldValue(customer.accountStatus), statusTone(metafieldValue(customer.accountStatus))],
-              ['Customer type', metafieldValue(customer.customerType)],
-              ['Payment terms', metafieldValue(customer.paymentTerms)],
-            ]}
-          />
+        <DetailSection
+          heading="Company information"
+          rows={[
+            ['Company name', metafieldValue(customer.companyName)],
+            ['Account number', metafieldValue(customer.accountNumber)],
+            ['Account status', metafieldValue(customer.accountStatus), statusTone(metafieldValue(customer.accountStatus))],
+            ['Customer type', metafieldValue(customer.customerType)],
+            ['Payment terms', metafieldValue(customer.paymentTerms)],
+          ]}
+        />
 
-          <DetailSection
-            heading="Primary contact"
-            rows={[
-              ['Name', metafieldValue(customer.primaryContactName, `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || '—')],
-              ['Email', metafieldValue(customer.primaryContactEmail, customer.emailAddress?.emailAddress || '—')],
-              ['Phone', metafieldValue(customer.primaryContactPhone)],
-            ]}
-          />
+        <DetailSection
+          heading="Primary contact"
+          rows={[
+            ['Name', metafieldValue(customer.primaryContactName, `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || '—')],
+            ['Email', metafieldValue(customer.primaryContactEmail, customer.emailAddress?.emailAddress || '—')],
+            ['Phone', metafieldValue(customer.primaryContactPhone)],
+          ]}
+        />
 
-          <DetailSection
-            heading="Billing contact"
-            rows={[
-              ['Name', metafieldValue(customer.billingContactName)],
-              ['Email', metafieldValue(customer.billingContactEmail)],
-              ['Phone', metafieldValue(customer.billingContactPhone)],
-            ]}
-          />
+        <DetailSection
+          heading="Billing contact"
+          rows={[
+            ['Name', metafieldValue(customer.billingContactName)],
+            ['Email', metafieldValue(customer.billingContactEmail)],
+            ['Phone', metafieldValue(customer.billingContactPhone)],
+          ]}
+        />
 
-          <DetailSection
-            heading="Tax information"
-            rows={[
-              ['Tax exempt status', metafieldValue(customer.taxExemptStatus)],
-              ['Certificate number', metafieldValue(customer.certificateNumber)],
-              ['Expiration date', shortDate(metafieldValue(customer.taxExpiryDate, ''))],
-            ]}
-            actions={
-              metafieldValue(customer.taxCertificateUrl, '') !== '' ? (
-                <s-link href={customer.taxCertificateUrl.value}>Upload certificate</s-link>
-              ) : null
-            }
-          />
+        <DetailSection
+          heading="Tax information"
+          rows={[
+            ['Tax exempt status', metafieldValue(customer.taxExemptStatus)],
+            ['Certificate number', metafieldValue(customer.certificateNumber)],
+            ['Expiration date', shortDate(metafieldValue(customer.taxExpiryDate, ''))],
+          ]}
+          actions={
+            metafieldValue(customer.taxCertificateUrl, '') !== '' ? (
+              <s-link href={customer.taxCertificateUrl.value}>Upload certificate</s-link>
+            ) : null
+          }
+        />
 
-          <DetailSection
-            heading="Credit information"
-            rows={[
-              ['Credit limit', money(metafieldValue(customer.creditLimit, 0))],
-              ['Current balance', money(metafieldValue(customer.currentBalance, 0))],
-              ['Available credit', money(metafieldValue(customer.availableCredit, 0))],
-            ]}
-            actions={
-              metafieldValue(customer.statementUrl, '') !== '' ? (
-                <s-link href={customer.statementUrl.value}>View statement</s-link>
-              ) : null
-            }
-          />
+        <DetailSection
+          heading="Credit information"
+          rows={[
+            ['Credit limit', money(metafieldValue(customer.creditLimit, 0))],
+            ['Current balance', money(metafieldValue(customer.currentBalance, 0))],
+            ['Available credit', money(metafieldValue(customer.availableCredit, 0))],
+          ]}
+          actions={
+            metafieldValue(customer.statementUrl, '') !== '' ? (
+              <s-link href={customer.statementUrl.value}>View statement</s-link>
+            ) : null
+          }
+        />
 
-          <DetailSection
-            heading="Preferences"
-            rows={[
-              ['Preferred warehouse', metafieldValue(customer.preferredWarehouse)],
-              ['Preferred shipping method', metafieldValue(customer.preferredShippingMethod)],
-              ['Email notifications', metafieldValue(customer.emailNotifications)],
-              ['Marketing emails', metafieldValue(customer.marketingEmails)],
-            ]}
-          />
-        </s-stack>
-      </s-page>
-    );
-  } catch (renderError) {
-    return (
-      <s-banner tone="critical">
-        <s-text type="strong">Render Crash:</s-text> {renderError.message}
-        <s-text>{renderError.stack}</s-text>
-      </s-banner>
-    );
-  }
+        <DetailSection
+          heading="Preferences"
+          rows={[
+            ['Preferred warehouse', metafieldValue(customer.preferredWarehouse)],
+            ['Preferred shipping method', metafieldValue(customer.preferredShippingMethod)],
+            ['Email notifications', metafieldValue(customer.emailNotifications)],
+            ['Marketing emails', metafieldValue(customer.marketingEmails)],
+          ]}
+        />
+      </s-stack>
+    </s-page>
+  );
 }
 
 function DetailSection({heading, rows, actions = null}) {
