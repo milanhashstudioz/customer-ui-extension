@@ -52,16 +52,16 @@ function Extension() {
       heading="Account details"
       subheading={`${metafieldValue(customer.companyName)} • ${metafieldValue(customer.accountNumber)}`}
     >
-      <s-button
+      {/* <s-button
         slot="primary-action"
         onClick={() => shopify.navigation.navigate('extension://dashboard-page')}
       >
         Back to dashboard
-      </s-button>
+      </s-button> */}
 
       <s-stack direction="block" gap="base">
         {/* Navigation Tabs */}
-        <s-box padding="none">
+        {/* <s-box padding="none">
           <s-stack direction="inline" gap="base">
             <s-button onClick={() => shopify.navigation.navigate('extension://dashboard-page')}>
               Dashboard
@@ -74,7 +74,7 @@ function Extension() {
               Address Book
             </s-button>
           </s-stack>
-        </s-box>
+        </s-box> */}
 
         <DetailSection
           heading="Company information"
@@ -92,7 +92,7 @@ function Extension() {
           rows={[
             ['Name', metafieldValue(customer.primaryContactName, `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || '—')],
             ['Email', metafieldValue(customer.primaryContactEmail, customer.emailAddress?.emailAddress || '—')],
-            ['Phone', metafieldValue(customer.primaryContactPhone)],
+            ['Phone', metafieldValue(customer.primaryContactPhone, `${customer.phone || ''}` || '—')],
           ]}
         />
 
