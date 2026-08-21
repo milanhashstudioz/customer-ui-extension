@@ -75,12 +75,16 @@ function Extension() {
 
   const metrics = calculateOrderMetrics(customer.orders);
 
+  const customCss = shopify.settings?.value?.custom_css || '';
+
   return (
-    <s-box border="base" borderRadius="base" padding="base">
-      <s-stack direction="block" gap="base">
-        <s-stack direction="block" gap="small">
-          <s-heading>Account summary</s-heading>
-          <s-text color="subdued">
+    <s-box border="base" borderRadius="base" padding="base" class="custom-profile-summary-block">
+      {customCss && <style dangerouslySetInnerHTML={{ __html: customCss }} />}
+
+      <s-stack direction="block" gap="base" class="profile-summary-stack">
+        <s-stack direction="block" gap="small" class="profile-summary-header-stack">
+          <s-heading class="profile-summary-heading">Account summary</s-heading>
+          <s-text color="subdued" class="profile-summary-subtitle">
             Welcome back, {customer.firstName || 'customer'}.
           </s-text>
         </s-stack>
@@ -90,48 +94,58 @@ function Extension() {
             {
               label: 'Account number',
               value: metafieldValue(customer.accountNumber),
+              key: 'account_number'
             },
             {
               label: 'Account status',
               value: metafieldValue(customer.accountStatus),
               tone: statusTone(metafieldValue(customer.accountStatus)),
+              key: 'account_status'
             },
             {
               label: 'Credit limit',
               value: money(metafieldValue(customer.creditLimit, 0)),
+              key: 'credit_limit'
             },
             {
               label: 'Current balance',
               value: money(metafieldValue(customer.currentBalance, 0)),
+              key: 'current_balance'
             },
             {
               label: 'Available credit',
               value: money(metafieldValue(customer.availableCredit, 0)),
+              key: 'available_credit'
             },
             {
               label: 'Open orders',
               value: String(metrics.openOrdersCount),
+              key: 'open_orders'
             },
             {
               label: 'Backordered items',
               value: String(metrics.backorderedItemsCount),
+              key: 'backordered_items'
             },
             {
               label: 'Open returns',
               value: String(metrics.openReturnsCount),
+              key: 'open_returns'
             },
           ]}
         />
  
-        <s-stack direction="inline" gap="base">
+        <s-stack direction="inline" gap="base" class="profile-summary-actions-stack">
           <s-button
             variant="primary"
             onClick={() => shopify.navigation.navigate('extension://account-details-page')}
+            class="profile-summary-btn view-details-btn"
           >
             View account details
           </s-button>
           <s-button
             onClick={() => shopify.navigation.navigate('shopify:customer-account/orders')}
+            class="profile-summary-btn view-orders-btn"
           >
             View all orders
           </s-button>
@@ -146,15 +160,16 @@ function MetricGrid({items}) {
     <s-grid
       gridTemplateColumns="repeat(auto-fit, minmax(180px, 1fr))"
       gap="base"
+      class="profile-summary-grid"
     >
       {items.map((item) => (
-        <s-box border="base" borderRadius="base" padding="base" key={item.label}>
-          <s-stack direction="block" gap="small-100">
-            <s-text color="subdued">{item.label}</s-text>
+        <s-box border="base" borderRadius="base" padding="base" key={item.label} class={`profile-summary-card profile-summary-card-${item.key || 'item'}`}>
+          <s-stack direction="block" gap="small-100" class="profile-summary-card-stack">
+            <s-text color="subdued" class="profile-summary-card-label">{item.label}</s-text>
             {item.tone ? (
-              <s-badge tone={item.tone}>{item.value}</s-badge>
+              <s-badge tone={item.tone} class="profile-summary-card-badge">{item.value}</s-badge>
             ) : (
-              <s-text type="strong">{item.value}</s-text>
+              <s-text type="strong" class="profile-summary-card-value">{item.value}</s-text>
             )}
           </s-stack>
         </s-box>

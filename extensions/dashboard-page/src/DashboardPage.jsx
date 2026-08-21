@@ -104,75 +104,66 @@ function Extension() {
   const backorderedItemsCount = metrics.backorderedItemsCount;
   const openReturnsCount = metrics.openReturnsCount;
 
+  const customCss = shopify.settings?.value?.custom_css || '';
+
   return (
     <s-page
       heading="MY ACCOUNT"
       subheading={`Welcome back, ${customer.firstName || 'customer'}! • Account #: ${metafieldValue(customer.accountNumber)}`}
+      class="custom-dashboard-page"
     >
+      {customCss && <style dangerouslySetInnerHTML={{ __html: customCss }} />}
+
       {/* Account Type dropdown in top right action area */}
-      <s-box slot="primary-action" padding="none">
-        <s-stack direction="inline" gap="small" blockAlignment="center">
-          <s-text size="small" type="strong" color="subdued">ACCOUNT TYPE</s-text>
+      <s-box slot="primary-action" padding="none" class="dashboard-action-box">
+        <s-stack direction="inline" gap="small" blockAlignment="center" class="dashboard-action-stack">
+          <s-text size="small" type="strong" color="subdued" class="dashboard-action-label">ACCOUNT TYPE</s-text>
           <s-select
             value={customerType}
             onChange={(e) => setCustomerType(e.target.value)}
+            class="dashboard-action-select"
           >
-            <s-option value="Retail">Retail</s-option>
-            <s-option value="Commercial">Commercial</s-option>
+            <s-option value="Retail" class="dashboard-action-option">Retail</s-option>
+            <s-option value="Commercial" class="dashboard-action-option">Commercial</s-option>
           </s-select>
         </s-stack>
       </s-box>
 
-      <s-stack direction="block" gap="large">
-        {/* Navigation Tabs */}
-        {/* <s-box padding="none">
-          <s-stack direction="inline" gap="base">
-            <s-button variant="primary">Dashboard</s-button>
-            <s-button onClick={() => shopify.navigation.navigate('extension://account-details-page')}>
-              Account Details
-            </s-button>
-            <s-button onClick={() => shopify.navigation.navigate('shopify:customer-account/orders')}>
-              Order History
-            </s-button>
-            <s-button onClick={() => shopify.navigation.navigate('shopify:customer-account/profile')}>
-              Address Book
-            </s-button>
-          </s-stack>
-        </s-box> */}
-
+      <s-stack direction="block" gap="large" class="dashboard-main-stack">
         {/* Account Summary Section */}
-        <s-box border="base" borderRadius="base" padding="none">
-          <s-stack direction="block" gap="none">
+        <s-box border="base" borderRadius="base" padding="none" class="dashboard-summary-section">
+          <s-stack direction="block" gap="none" class="dashboard-summary-stack">
             {/* Header with padding */}
-            <s-box padding="base">
-              <s-stack direction="inline" gap="small" blockAlignment="center">
+            <s-box padding="base" class="dashboard-summary-header">
+              <s-stack direction="inline" gap="small" blockAlignment="center" class="dashboard-summary-header-stack">
                 <s-icon type="profile" />
-                <s-heading>ACCOUNT SUMMARY</s-heading>
+                <s-heading class="dashboard-summary-heading">ACCOUNT SUMMARY</s-heading>
               </s-stack>
             </s-box>
             
             <s-divider></s-divider>
 
             {/* Top Section with scroll box for responsiveness */}
-            <s-scroll-box border="none" padding="none">
-              <s-box padding="base" minInlineSize="500px">
+            <s-scroll-box border="none" padding="none" class="dashboard-summary-scroll-top">
+              <s-box padding="base" minInlineSize="500px" class="dashboard-summary-box-top">
                 <s-grid
                   gridTemplateColumns="1fr auto 1fr auto 1fr"
                   gap="base"
                   blockAlignment="center"
+                  class="dashboard-summary-grid-top"
                 >
                   {/* Column 1: Status & Available Credit */}
-                  <s-stack direction="block" gap="base">
-                    <s-stack direction="block" gap="small-100">
-                      <s-text color="subdued" size="small" type="strong">ACCOUNT STATUS</s-text>
-                      <s-stack direction="inline" gap="small-100" blockAlignment="center">
-                        <s-text type="strong" color="success">●</s-text>
-                        <s-text type="strong" color="success">{metafieldValue(customer.accountStatus)}</s-text>
+                  <s-stack direction="block" gap="base" class="dashboard-summary-col-1">
+                    <s-stack direction="block" gap="small-100" class="dashboard-status-stack">
+                      <s-text color="subdued" size="small" type="strong" class="dashboard-status-label">ACCOUNT STATUS</s-text>
+                      <s-stack direction="inline" gap="small-100" blockAlignment="center" class="dashboard-status-val-stack">
+                        <s-text type="strong" color="success" class="dashboard-status-dot">●</s-text>
+                        <s-text type="strong" color="success" class="dashboard-status-text">{metafieldValue(customer.accountStatus)}</s-text>
                       </s-stack>
                     </s-stack>
-                    <s-stack direction="block" gap="small-100">
-                      <s-text color="subdued" size="small" type="strong">AVAILABLE CREDIT</s-text>
-                      <s-text type="strong" size="large">{money(metafieldValue(customer.availableCredit))}</s-text>
+                    <s-stack direction="block" gap="small-100" class="dashboard-credit-card available-credit-card">
+                      <s-text color="subdued" size="small" type="strong" class="dashboard-credit-label">AVAILABLE CREDIT</s-text>
+                      <s-text type="strong" size="large" class="dashboard-credit-value">{money(metafieldValue(customer.availableCredit))}</s-text>
                     </s-stack>
                   </s-stack>
 
@@ -180,18 +171,18 @@ function Extension() {
                   <s-divider direction="block" />
 
                   {/* Column 2: Credit Limit */}
-                  <s-stack direction="block" gap="small-100">
-                    <s-text color="subdued" size="small" type="strong">CREDIT LIMIT</s-text>
-                    <s-text type="strong" size="large">{money(metafieldValue(customer.creditLimit))}</s-text>
+                  <s-stack direction="block" gap="small-100" class="dashboard-summary-col-2 dashboard-credit-card credit-limit-card">
+                    <s-text color="subdued" size="small" type="strong" class="dashboard-credit-label">CREDIT LIMIT</s-text>
+                    <s-text type="strong" size="large" class="dashboard-credit-value">{money(metafieldValue(customer.creditLimit))}</s-text>
                   </s-stack>
 
                   {/* Vertical Divider */}
                   <s-divider direction="block" />
 
                   {/* Column 3: Current Balance */}
-                  <s-stack direction="block" gap="small-100">
-                    <s-text color="subdued" size="small" type="strong">CURRENT BALANCE</s-text>
-                    <s-text type="strong" size="large">{money(metafieldValue(customer.currentBalance))}</s-text>
+                  <s-stack direction="block" gap="small-100" class="dashboard-summary-col-3 dashboard-credit-card current-balance-card">
+                    <s-text color="subdued" size="small" type="strong" class="dashboard-credit-label">CURRENT BALANCE</s-text>
+                    <s-text type="strong" size="large" class="dashboard-credit-value">{money(metafieldValue(customer.currentBalance))}</s-text>
                   </s-stack>
                 </s-grid>
               </s-box>
@@ -200,44 +191,36 @@ function Extension() {
             <s-divider></s-divider>
 
             {/* Bottom Section with scroll box for responsiveness */}
-            <s-scroll-box border="none" padding="none">
-              <s-box padding="base" minInlineSize="500px">
+            <s-scroll-box border="none" padding="none" class="dashboard-summary-scroll-bottom">
+              <s-box padding="base" minInlineSize="500px" class="dashboard-summary-box-bottom">
                 <s-grid
                   gridTemplateColumns="1fr auto 1fr auto 1fr"
                   gap="base"
                   blockAlignment="center"
+                  class="dashboard-summary-grid-bottom"
                 >
                   {/* Column 1: Open Orders */}
-                  <s-stack direction="block" gap="small-100" inlineAlignment="start">
-                    <s-text color="subdued" size="small" type="strong">OPEN ORDERS</s-text>
-                    <s-text type="strong" size="large">{String(openOrdersCount)}</s-text>
-                    {/* <s-link onClick={() => shopify.navigation.navigate('shopify:customer-account/orders')}>
-                      View orders →
-                    </s-link> */}
+                  <s-stack direction="block" gap="small-100" inlineAlignment="start" class="dashboard-metric-stack open-orders-stack">
+                    <s-text color="subdued" size="small" type="strong" class="dashboard-metric-label">OPEN ORDERS</s-text>
+                    <s-text type="strong" size="large" class="dashboard-metric-value">{String(openOrdersCount)}</s-text>
                   </s-stack>
 
                   {/* Vertical Divider */}
                   <s-divider direction="block" />
 
                   {/* Column 2: Backordered Items */}
-                  <s-stack direction="block" gap="small-100" inlineAlignment="start">
-                    <s-text color="subdued" size="small" type="strong">BACKORDERED ITEMS</s-text>
-                    <s-text type="strong" size="large">{String(backorderedItemsCount)}</s-text>
-                    {/* <s-link onClick={() => shopify.navigation.navigate('extension://account-details-page')}>
-                      View details →
-                    </s-link> */}
+                  <s-stack direction="block" gap="small-100" inlineAlignment="start" class="dashboard-metric-stack backorder-items-stack">
+                    <s-text color="subdued" size="small" type="strong" class="dashboard-metric-label">BACKORDERED ITEMS</s-text>
+                    <s-text type="strong" size="large" class="dashboard-metric-value">{String(backorderedItemsCount)}</s-text>
                   </s-stack>
 
                   {/* Vertical Divider */}
                   <s-divider direction="block" />
 
                   {/* Column 3: Open Returns */}
-                  <s-stack direction="block" gap="small-100" inlineAlignment="start">
-                    <s-text color="subdued" size="small" type="strong">OPEN RETURNS (RMAs)</s-text>
-                    <s-text type="strong" size="large">{String(openReturnsCount)}</s-text>
-                    {/* <s-link onClick={() => shopify.navigation.navigate('shopify:customer-account/orders')}>
-                      View returns →
-                    </s-link> */}
+                  <s-stack direction="block" gap="small-100" inlineAlignment="start" class="dashboard-metric-stack open-returns-stack">
+                    <s-text color="subdued" size="small" type="strong" class="dashboard-metric-label">OPEN RETURNS (RMAs)</s-text>
+                    <s-text type="strong" size="large" class="dashboard-metric-value">{String(openReturnsCount)}</s-text>
                   </s-stack>
                 </s-grid>
               </s-box>
@@ -246,34 +229,35 @@ function Extension() {
         </s-box>
 
         {/* Recent Activity Section */}
-        <s-box border="base" borderRadius="base" padding="none">
-          <s-stack direction="block" gap="none">
+        <s-box border="base" borderRadius="base" padding="none" class="dashboard-activity-section">
+          <s-stack direction="block" gap="none" class="dashboard-activity-stack">
             {/* Header with padding */}
-            <s-box padding="base">
-              <s-stack direction="inline" gap="small" blockAlignment="center">
+            <s-box padding="base" class="dashboard-activity-header">
+              <s-stack direction="inline" gap="small" blockAlignment="center" class="dashboard-activity-header-stack">
                 <s-icon type="calendar" />
-                <s-heading>RECENT ACTIVITY</s-heading>
+                <s-heading class="dashboard-activity-heading">RECENT ACTIVITY</s-heading>
               </s-stack>
             </s-box>
             
             <s-divider></s-divider>
 
             {customer.orders?.nodes?.length ? (
-              <s-scroll-box border="none" padding="none">
-                <s-box padding="base" minInlineSize="650px">
-                  <s-stack direction="block" gap="small-100">
+              <s-scroll-box border="none" padding="none" class="dashboard-activity-scroll">
+                <s-box padding="base" minInlineSize="650px" class="dashboard-activity-box">
+                  <s-stack direction="block" gap="small-100" class="dashboard-activity-rows-stack">
                     {/* Table Header with shaded background */}
-                    <s-box padding="small" border="none" borderRadius="none" background="subdued">
+                    <s-box padding="small" border="none" borderRadius="none" background="subdued" class="dashboard-table-header">
                       <s-grid
                         gridTemplateColumns="minmax(80px, 1fr) minmax(110px, 1.2fr) minmax(90px, 1fr) minmax(100px, 1fr) minmax(90px, 1fr) minmax(60px, 0.8fr)"
                         gap="small"
+                        class="dashboard-table-header-grid"
                       >
-                        <s-text type="strong" color="subdued">ORDER #</s-text>
-                        <s-text type="strong" color="subdued">ORDER DATE</s-text>
-                        <s-text type="strong" color="subdued">PO NUMBER</s-text>
-                        <s-text type="strong" color="subdued">STATUS</s-text>
-                        <s-text type="strong" color="subdued">TOTAL</s-text>
-                        <s-text type="strong" color="subdued">ACTION</s-text>
+                        <s-text type="strong" color="subdued" class="dashboard-table-th">ORDER #</s-text>
+                        <s-text type="strong" color="subdued" class="dashboard-table-th">ORDER DATE</s-text>
+                        <s-text type="strong" color="subdued" class="dashboard-table-th">PO NUMBER</s-text>
+                        <s-text type="strong" color="subdued" class="dashboard-table-th">STATUS</s-text>
+                        <s-text type="strong" color="subdued" class="dashboard-table-th">TOTAL</s-text>
+                        <s-text type="strong" color="subdued" class="dashboard-table-th">ACTION</s-text>
                       </s-grid>
                     </s-box>
                     
@@ -283,22 +267,23 @@ function Extension() {
                     {customer.orders.nodes.slice(0, 5).map((order) => {
                       const numericId = order.id.split('/').pop();
                       return (
-                        <s-box padding="small" key={order.id} border="none">
+                        <s-box padding="small" key={order.id} border="none" class="dashboard-table-row">
                           <s-grid
                             gridTemplateColumns="minmax(80px, 1fr) minmax(110px, 1.2fr) minmax(90px, 1fr) minmax(100px, 1fr) minmax(90px, 1fr) minmax(60px, 0.8fr)"
                             gap="small"
                             blockAlignment="center"
+                            class="dashboard-table-row-grid"
                           >
-                            <s-text type="strong">{order.name}</s-text>
-                            <s-text>{shortDate(order.processedAt)}</s-text>
-                            <s-text>{getPoNumber(order)}</s-text>
-                            <s-badge tone={statusTone(order.fulfillmentStatus || order.financialStatus)}>
+                            <s-text type="strong" class="dashboard-table-cell order-name-cell">{order.name}</s-text>
+                            <s-text class="dashboard-table-cell order-date-cell">{shortDate(order.processedAt)}</s-text>
+                            <s-text class="dashboard-table-cell order-po-cell">{getPoNumber(order)}</s-text>
+                            <s-badge tone={statusTone(order.fulfillmentStatus || order.financialStatus)} class="dashboard-table-badge">
                               {order.fulfillmentStatus || order.financialStatus || 'Processing'}
                             </s-badge>
-                            <s-text type="strong">
+                            <s-text type="strong" class="dashboard-table-cell order-total-cell">
                               {money(order.totalPrice?.amount, order.totalPrice?.currencyCode)}
                             </s-text>
-                            <s-link onClick={() => shopify.navigation.navigate(`shopify:customer-account/orders/${numericId}`)}>
+                            <s-link onClick={() => shopify.navigation.navigate(`shopify:customer-account/orders/${numericId}`)} class="dashboard-table-link">
                               View
                             </s-link>
                           </s-grid>
@@ -309,16 +294,16 @@ function Extension() {
                 </s-box>
               </s-scroll-box>
             ) : (
-              <s-box padding="base">
-                <s-text color="subdued">No orders found for this customer.</s-text>
+              <s-box padding="base" class="dashboard-empty-activity">
+                <s-text color="subdued" class="dashboard-empty-text">No orders found for this customer.</s-text>
               </s-box>
             )}
 
             <s-divider></s-divider>
             
-            <s-box padding="base">
-              <s-stack direction="inline" inlineAlignment="center">
-                <s-link onClick={() => shopify.navigation.navigate('shopify:customer-account/orders')}>
+            <s-box padding="base" class="dashboard-footer-box">
+              <s-stack direction="inline" inlineAlignment="center" class="dashboard-footer-stack">
+                <s-link onClick={() => shopify.navigation.navigate('shopify:customer-account/orders')} class="dashboard-footer-link">
                   View all orders →
                 </s-link>
               </s-stack>
@@ -344,16 +329,16 @@ function getPoNumber(order) {
 
 function MetricCard({label, value, tone = null, linkText = null, onLinkClick = null}) {
   return (
-    <s-box border="base" borderRadius="base" padding="base">
-      <s-stack direction="block" gap="small-100">
-        <s-text color="subdued" size="small" type="strong">{label}</s-text>
+    <s-box border="base" borderRadius="base" padding="base" class="custom-metric-card">
+      <s-stack direction="block" gap="small-100" class="custom-metric-card-stack">
+        <s-text color="subdued" size="small" type="strong" class="custom-metric-card-label">{label}</s-text>
         {tone ? (
-          <s-badge tone={tone}>{value}</s-badge>
+          <s-badge tone={tone} class="custom-metric-card-badge">{value}</s-badge>
         ) : (
-          <s-text type="strong" size="large">{value}</s-text>
+          <s-text type="strong" size="large" class="custom-metric-card-value">{value}</s-text>
         )}
         {linkText && onLinkClick && (
-          <s-link onClick={onLinkClick}>
+          <s-link onClick={onLinkClick} class="custom-metric-card-link">
             {linkText} →
           </s-link>
         )}

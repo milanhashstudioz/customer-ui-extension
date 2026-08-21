@@ -12,3 +12,11 @@ module = "./src/AccountDetailsPage.jsx"
 
 [extensions.capabilities]
 api_access = true
+
+[extensions.settings]
+[[extensions.settings.fields]]
+key = "custom_css"
+type = "multi_line_text_field"
+name = "Custom CSS"
+description = "Add custom CSS to style the elements on this page."
+

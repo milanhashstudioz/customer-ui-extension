@@ -40,44 +40,27 @@ function Extension() {
   }, []);
 
   if (error) {
-    return <s-banner tone="critical">Unable to load account details: {error}</s-banner>;
+    return <s-banner tone="critical" class="account-details-error">Unable to load account details: {error}</s-banner>;
   }
 
   if (!customer) {
-    return <s-text>Loading account details…</s-text>;
+    return <s-text class="account-details-loading">Loading account details…</s-text>;
   }
+
+  const customCss = shopify.settings?.value?.custom_css || '';
 
   return (
     <s-page
       heading="Account details"
       subheading={`${metafieldValue(customer.companyName)} • ${metafieldValue(customer.accountNumber)}`}
+      class="custom-account-details-page"
     >
-      {/* <s-button
-        slot="primary-action"
-        onClick={() => shopify.navigation.navigate('extension://dashboard-page')}
-      >
-        Back to dashboard
-      </s-button> */}
+      {customCss && <style dangerouslySetInnerHTML={{ __html: customCss }} />}
 
-      <s-stack direction="block" gap="base">
-        {/* Navigation Tabs */}
-        {/* <s-box padding="none">
-          <s-stack direction="inline" gap="base">
-            <s-button onClick={() => shopify.navigation.navigate('extension://dashboard-page')}>
-              Dashboard
-            </s-button>
-            <s-button variant="primary">Account Details</s-button>
-            <s-button onClick={() => shopify.navigation.navigate('shopify:customer-account/orders')}>
-              Order History
-            </s-button>
-            <s-button onClick={() => shopify.navigation.navigate('shopify:customer-account/profile')}>
-              Address Book
-            </s-button>
-          </s-stack>
-        </s-box> */}
-
+      <s-stack direction="block" gap="base" class="account-details-stack">
         <DetailSection
           heading="Company information"
+          class="company-info-section"
           rows={[
             ['Company name', metafieldValue(customer.companyName)],
             ['Account number', metafieldValue(customer.accountNumber)],
@@ -89,6 +72,7 @@ function Extension() {
 
         <DetailSection
           heading="Primary contact"
+          class="primary-contact-section"
           rows={[
             ['Name', metafieldValue(customer.primaryContactName, `${customer.firstName || ''} ${customer.lastName || ''}`.trim() || '—')],
             ['Email', metafieldValue(customer.primaryContactEmail, customer.emailAddress?.emailAddress || '—')],
@@ -98,6 +82,7 @@ function Extension() {
 
         <DetailSection
           heading="Billing contact"
+          class="billing-contact-section"
           rows={[
             ['Name', metafieldValue(customer.billingContactName)],
             ['Email', metafieldValue(customer.billingContactEmail)],
@@ -107,6 +92,7 @@ function Extension() {
 
         <DetailSection
           heading="Tax information"
+          class="tax-info-section"
           rows={[
             ['Tax exempt status', metafieldValue(customer.taxExemptStatus)],
             ['Certificate number', metafieldValue(customer.certificateNumber)],
@@ -114,13 +100,14 @@ function Extension() {
           ]}
           actions={
             metafieldValue(customer.taxCertificateUrl, '') !== '' ? (
-              <s-link href={customer.taxCertificateUrl.value}>Upload certificate</s-link>
+              <s-link href={customer.taxCertificateUrl.value} class="detail-action-link tax-cert-link">Upload certificate</s-link>
             ) : null
           }
         />
 
         <DetailSection
           heading="Credit information"
+          class="credit-info-section"
           rows={[
             ['Credit limit', money(metafieldValue(customer.creditLimit, 0))],
             ['Current balance', money(metafieldValue(customer.currentBalance, 0))],
@@ -128,13 +115,14 @@ function Extension() {
           ]}
           actions={
             metafieldValue(customer.statementUrl, '') !== '' ? (
-              <s-link href={customer.statementUrl.value}>View statement</s-link>
+              <s-link href={customer.statementUrl.value} class="detail-action-link statement-link">View statement</s-link>
             ) : null
           }
         />
 
         <DetailSection
           heading="Preferences"
+          class="preferences-section"
           rows={[
             ['Preferred warehouse', metafieldValue(customer.preferredWarehouse)],
             ['Preferred shipping method', metafieldValue(customer.preferredShippingMethod)],
@@ -147,29 +135,30 @@ function Extension() {
   );
 }
 
-function DetailSection({heading, rows, actions = null}) {
+function DetailSection({heading, rows, actions = null, class: className = ''}) {
   return (
-    <s-box border="base" borderRadius="base" padding="base">
-      <s-stack direction="block" gap="base">
-        <s-heading>{heading}</s-heading>
+    <s-box border="base" borderRadius="base" padding="base" class={`detail-section ${className}`.trim()}>
+      <s-stack direction="block" gap="base" class="detail-section-stack">
+        <s-heading class="detail-section-heading">{heading}</s-heading>
         <s-grid
           gridTemplateColumns="repeat(auto-fit, minmax(220px, 1fr))"
           gap="base"
+          class="detail-section-grid"
         >
           {rows.map(([label, value, tone]) => (
-            <s-box border="base" borderRadius="base" padding="base" key={label}>
-              <s-stack direction="block" gap="small-100">
-                <s-text color="subdued">{label}</s-text>
+            <s-box border="base" borderRadius="base" padding="base" key={label} class="detail-card">
+              <s-stack direction="block" gap="small-100" class="detail-card-stack">
+                <s-text color="subdued" class="detail-card-label">{label}</s-text>
                 {tone ? (
-                  <s-badge tone={tone}>{value}</s-badge>
+                  <s-badge tone={tone} class="detail-card-badge">{value}</s-badge>
                 ) : (
-                  <s-text type="strong">{value}</s-text>
+                  <s-text type="strong" class="detail-card-value">{value}</s-text>
                 )}
               </s-stack>
             </s-box>
           ))}
         </s-grid>
-        {actions}
+        {actions && <s-box class="detail-section-actions">{actions}</s-box>}
       </s-stack>
     </s-box>
   );
